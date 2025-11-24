@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3BC91C442ED41801004C7D82 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 3BC91C432ED41801004C7D82 /* FirebaseCore */; };
-		3BC91C462ED41898004C7D82 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 3BC91C452ED41898004C7D82 /* FirebaseAuth */; };
-		3BC91C8C2ED42DF9004C7D82 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 3BC91C8B2ED42DF9004C7D82 /* FirebaseFirestore */; };
+		3BC1EBD02ED658770026D569 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 3BC1EBCF2ED658770026D569 /* FirebaseAuth */; };
+		3BC1EBD42ED658840026D569 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 3BC1EBD32ED658840026D569 /* FirebaseCore */; };
+		3BC1EBD82ED658D10026D569 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 3BC1EBD72ED658D10026D569 /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,9 +58,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3BC91C442ED41801004C7D82 /* FirebaseCore in Frameworks */,
-				3BC91C462ED41898004C7D82 /* FirebaseAuth in Frameworks */,
-				3BC91C8C2ED42DF9004C7D82 /* FirebaseFirestore in Frameworks */,
+				3BC1EBD82ED658D10026D569 /* FirebaseFirestore in Frameworks */,
+				3BC1EBD42ED658840026D569 /* FirebaseCore in Frameworks */,
+				3BC1EBD02ED658770026D569 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,9 +129,9 @@
 			);
 			name = "V-Walk";
 			packageProductDependencies = (
-				3BC91C432ED41801004C7D82 /* FirebaseCore */,
-				3BC91C452ED41898004C7D82 /* FirebaseAuth */,
-				3BC91C8B2ED42DF9004C7D82 /* FirebaseFirestore */,
+				3BC1EBCF2ED658770026D569 /* FirebaseAuth */,
+				3BC1EBD32ED658840026D569 /* FirebaseCore */,
+				3BC1EBD72ED658D10026D569 /* FirebaseFirestore */,
 			);
 			productName = "V-Walk";
 			productReference = 3BC1163F2ED3508A005BD311 /* V-Walk.app */;
@@ -653,17 +653,17 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3BC91C432ED41801004C7D82 /* FirebaseCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3BC91C412ED415FB004C7D82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCore;
-		};
-		3BC91C452ED41898004C7D82 /* FirebaseAuth */ = {
+		3BC1EBCF2ED658770026D569 /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3BC91C412ED415FB004C7D82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
 		};
-		3BC91C8B2ED42DF9004C7D82 /* FirebaseFirestore */ = {
+		3BC1EBD32ED658840026D569 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3BC91C412ED415FB004C7D82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		3BC1EBD72ED658D10026D569 /* FirebaseFirestore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3BC91C412ED415FB004C7D82 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;

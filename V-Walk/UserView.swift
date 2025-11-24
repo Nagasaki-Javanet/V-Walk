@@ -3,7 +3,7 @@ import FirebaseAuth
 
 struct UserView: View {
     // Observe UserManager for dynamic data (Name, Points)
-    @StateObject var userManager = UserManager()
+    @EnvironmentObject var userManager : UserManager
     
     var body: some View {
         NavigationStack {
@@ -35,39 +35,39 @@ struct UserView: View {
                     }
                     .padding(.top)
                     
-                    // MARK: - 2. Points & VIP Card
+                    // MARK: - 2. VIP Card Section
                     ZStack {
                         // Card Background (Gradient for VIP look)
                         RoundedRectangle(cornerRadius: 20)
-                            .fill(LinearGradient(colors: [Color.purple, Color.blue], startPoint: .topLeading, endPoint: .bottomTrailing))
+                            .fill(userManager.userRank.backgroundGradient.opacity(0.8))
                             .shadow(radius: 5)
                         
                         VStack(alignment: .leading, spacing: 15) {
                             HStack {
                                 Image(systemName: "crown.fill")
-                                    .foregroundStyle(.yellow)
-                                Text("VIP ランク: \(userManager.vipRank)") // "VIP Member"
-                                    .font(.headline)
-                                    .foregroundStyle(.white)
+                                                .foregroundStyle(userManager.userRank == .vip || userManager.userRank == .gold ? .yellow : userManager.userRank.cardContentColor)
+                                Text("ランク: \(userManager.userRank.rawValue)")
+                                                .font(.headline)
+                                                .foregroundStyle(userManager.userRank.cardContentColor)
                                 Spacer()
                                 Text("V-WALK CARD")
                                     .font(.caption)
-                                    .foregroundStyle(.white.opacity(0.8))
+                                    .foregroundStyle(userManager.userRank.cardContentColor.opacity(0.8))
                             }
                             
                             Spacer()
                             
                             Text("保有ポイント") // "Current Points"
                                 .font(.caption)
-                                .foregroundStyle(.white.opacity(0.8))
+                                .foregroundStyle(userManager.userRank.cardContentColor.opacity(0.8))
                             
                             HStack(alignment: .lastTextBaseline) {
                                 Text("\(userManager.userPoints)")
                                     .font(.system(size: 36, weight: .bold, design: .rounded))
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(userManager.userRank.cardContentColor)
                                 Text("P")
                                     .font(.title3)
-                                    .foregroundStyle(.white)
+                                    .foregroundStyle(userManager.userRank.cardContentColor)
                             }
                         }
                         .padding(20)
@@ -75,52 +75,55 @@ struct UserView: View {
                     .frame(height: 160)
                     .padding(.horizontal)
                     
+                    // MARK: - 2.5 Rank Progress (New!)
+                    // Placed below the card for better visibility
+                    RankProgressView(userPoints: userManager.userPoints, userRank: userManager.userRank)
+                        .padding(.top, -10) // Pull up slightly to connect visually
+                    
                     // MARK: - 3. Coupons (Discount Tickets)
                     VStack(alignment: .leading) {
                         Text("保有クーポン") // "My Coupons"
                             .font(.headline)
                             .padding(.horizontal)
+                        
                         if userManager.coupons.isEmpty {
-                               // Case: No Coupons
-                               HStack {
-                                   Spacer()
-                                   VStack(spacing: 10) {
-                                       Image(systemName: "ticket")
-                                           .font(.largeTitle)
-                                           .foregroundStyle(.gray.opacity(0.5))
-                                       Text("利用可能なクーポンはありません") // "No available coupons"
-                                           .font(.caption)
-                                           .foregroundStyle(.gray)
-                                   }
-                                   Spacer()
-                               }
-                               .padding()
-                               .frame(height: 100)
-                               .background(Color(uiColor: .secondarySystemBackground)) // Light gray background
-                               .cornerRadius(12)
-                               .padding(.horizontal)
-                               
-                           }
-                        else{
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 15) {
-
-                                    ForEach (userManager.coupons){
-                                        coupon in
+                            // Case: No Coupons
+                            HStack {
+                                Spacer()
+                                VStack(spacing: 10) {
+                                    Image(systemName: "ticket")
+                                        .font(.largeTitle)
+                                        .foregroundStyle(.gray.opacity(0.5))
+                                    Text("利用可能なクーポンはありません") // "No available coupons"
+                                        .font(.caption)
+                                        .foregroundStyle(.gray)
+                                }
+                                Spacer()
+                            }
+                            .padding()
+                            .frame(height: 100)
+                            .background(Color(uiColor: .secondarySystemBackground))
+                            .cornerRadius(12)
+                            .padding(.horizontal)
+                            
+                        } else {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 15) {
+                                    ForEach(userManager.coupons) { coupon in
                                         CouponCard(title: coupon.title, expiry: coupon.expiryString)
                                     }
-                            
-                                
+                                }
+                                .padding(.horizontal)
                             }
-                            .padding(.horizontal)
-                        }}
+                        }
                     }
                     
-                    // MARK: - 4. Payment History (Nagasaki Stadium City)
+                    // MARK: - 4. Payment History
                     VStack(alignment: .leading, spacing: 15) {
-                        Text("長崎スタジアムシティ 決済履歴") // "Payment History in Nagasaki Stadium City"
+                        Text("長崎スタジアムシティ 決済履歴") // "Payment History"
                             .font(.headline)
                             .padding(.horizontal)
+                        
                         if userManager.paymentHistory.isEmpty {
                             Text("まだ履歴がありません") // "No history yet"
                                 .font(.subheadline)
@@ -130,14 +133,12 @@ struct UserView: View {
                                 .background(Color(uiColor: .secondarySystemBackground))
                                 .cornerRadius(12)
                                 .padding(.horizontal)
-                        }
-                        else{
+                        } else {
                             VStack(spacing: 0) {
                                 ForEach(userManager.paymentHistory) { history in
                                     HistoryRow(date: history.dateString, item: history.itemName, price: history.priceString)
+                                    Divider() // Add divider for better readability
                                 }
-
-                                
                             }
                             .background(Color(uiColor: .secondarySystemBackground))
                             .cornerRadius(12)
@@ -150,30 +151,29 @@ struct UserView: View {
                         Text("完了したコース") // "Completed Courses"
                             .font(.headline)
                             .padding(.horizontal)
+                        
                         if userManager.completedCourses.isEmpty {
-                                // Case: No Completed Courses
-                                HStack {
-                                    Spacer()
-                                    VStack(spacing: 10) {
-                                        Image(systemName: "flag.slash")
-                                            .font(.largeTitle)
-                                            .foregroundStyle(.gray.opacity(0.5))
-                                        Text("完了したコースはまだありません") // "No completed courses yet"
-                                            .font(.caption)
-                                            .foregroundStyle(.gray)
-                                    }
-                                    Spacer()
+                            // Case: No Completed Courses
+                            HStack {
+                                Spacer()
+                                VStack(spacing: 10) {
+                                    Image(systemName: "flag.slash")
+                                        .font(.largeTitle)
+                                        .foregroundStyle(.gray.opacity(0.5))
+                                    Text("完了したコースはまだありません") // "No completed courses yet"
+                                        .font(.caption)
+                                        .foregroundStyle(.gray)
                                 }
-                                .padding()
-                                .frame(height: 100)
-                                .background(Color(uiColor: .secondarySystemBackground))
-                                .cornerRadius(12)
-                                .padding(.horizontal)
-                                
+                                Spacer()
                             }
-                        else{
+                            .padding()
+                            .frame(height: 100)
+                            .background(Color(uiColor: .secondarySystemBackground))
+                            .cornerRadius(12)
+                            .padding(.horizontal)
+                            
+                        } else {
                             VStack(alignment: .leading, spacing: 10) {
-                                // Dummy Course Data
                                 ForEach(userManager.completedCourses) { course in
                                     CourseRow(title: course.courseTitle, date: course.dateString)
                                 }
@@ -187,12 +187,18 @@ struct UserView: View {
             }
             .navigationTitle("マイページ") // "My Page"
             .navigationBarTitleDisplayMode(.inline)
-            .onAppear {
-                userManager.loadUserData() // Load fresh data when view appears
+            .refreshable {
+                userManager.loadUserData()
             }
+            .onAppear {
+                userManager.loadUserData()
+            }
+            
         }
     }
 }
+
+
 
 // MARK: - Helper Views (Components)
 
@@ -269,6 +275,62 @@ struct CourseRow: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Color(uiColor: .secondarySystemBackground))
         .cornerRadius(10)
+    }
+}
+struct RankProgressView: View {
+   let userPoints : Int
+   let userRank : UserRank
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            // 1. Rank Info & Points Needed
+            HStack {
+                // Display current rank
+                Text(userRank.rawValue)
+                    .font(.headline)
+                    .bold()
+                    .foregroundStyle(userRank.rankColor)
+                
+                Spacer()
+                
+                // Display remaining points for next rank
+                if userRank != .vip {
+                    let needed = userRank.nextRankPoints - userPoints
+                    // "Next rank in X points"
+                    Text("次のランクまであと \(needed)P")
+                        .font(.caption)
+                        .foregroundStyle(.gray)
+                } else {
+                    // "Highest Rank Reached"
+                    Text("最高ランクです！")
+                        .font(.caption)
+                        .foregroundStyle(.purple)
+                }
+            }
+            
+            // 2. Progress Bar
+            // Calculates percentage (0.0 ~ 1.0)
+            ProgressView(value: UserRank.progress(currentPoints: userPoints))
+                .progressViewStyle(LinearProgressViewStyle(tint:
+                                                            userRank == .silver ? .blue : userRank.rankColor))
+                .scaleEffect(y: 2) // Make the bar slightly thicker
+                .background(userRank.progressBarTrackColor)
+                .cornerRadius(4)
+            
+            // 3. Points Label (Current / Target)
+            HStack {
+                Text("\(userPoints)")
+                Spacer()
+                Text("\(userRank.nextRankPoints)")
+            }
+            .font(.caption2)
+            .foregroundStyle(.gray)
+        }
+        .padding()
+        .background(Color.white) // Card background color
+        .cornerRadius(15)
+        .shadow(radius: 2) // Slight shadow for depth
+        .padding(.horizontal)
     }
 }
 

@@ -21,12 +21,21 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct V_WalkApp: App {
     // register app delegate for Firebase setup
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-
+    @StateObject var userManager = UserManager()
+    @StateObject var playerManager = PlayerManager()
     var body: some Scene {
       WindowGroup {
-        NavigationView {
-          ContentView()
+          if userManager.isLoggedIn {
+              ContentView()
+                    .environmentObject(userManager)
+                    .environmentObject(playerManager)
+          }
+          else {
+              LoginView()
+                  .environmentObject(userManager)
+          }
+         
         }
       }
     }
-}
+
