@@ -2,6 +2,7 @@ import SwiftUI
 import FirebaseAuth // Import for Firebase Authentication
 
 struct LoginView: View {
+    @EnvironmentObject private var userManager : UserManager
     @State private var email = ""
     @State private var password = ""
     @State private var errorMessage = "" // Variable to display error messages
@@ -55,10 +56,7 @@ struct LoginView: View {
                 .padding(.top, 10)
             }
             .padding()
-            .navigationDestination(isPresented: $isLoggedIn) {
-                // Navigate to Main View after successful login
-                ContentView()
-            }
+
         }
     }
 
@@ -71,13 +69,11 @@ struct LoginView: View {
             } else {
                 // Success case
                 errorMessage = ""
-                isLoggedIn = true
+                userManager.isLoggedIn = true
+                print("isLoggeIn: \(userManager.isLoggedIn)")
                 print("Login successful: \(result?.user.uid ?? "")")
+               
             }
         }
     }
-}
-
-#Preview {
-    LoginView()
 }

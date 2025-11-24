@@ -6,7 +6,7 @@ struct SignUpView: View {
     @State private var password = ""
     
     // Use UserManager to save extra data
-    @StateObject private var userManager = UserManager()
+    @EnvironmentObject private var userManager : UserManager
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {

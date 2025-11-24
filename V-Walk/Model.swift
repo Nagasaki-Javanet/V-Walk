@@ -46,3 +46,16 @@ struct CompletedCourse: Identifiable, Codable {
         return formatter.string(from: completedDate)
     }
 }
+
+// Player Model
+struct Player: Identifiable, Codable {
+    @DocumentID var id: String?
+    var name: String
+    var backNumber: Int
+    var team: String
+    var position: String
+    var playerImageURL: String
+    var totalPoints: Int
+
+    
+}
