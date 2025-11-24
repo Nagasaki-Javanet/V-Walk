@@ -1,11 +1,13 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var userManager: UserManager
+    @EnvironmentObject var playerManager: PlayerManager
     var body: some View {
         
         TabView {
         
-            Text("Home")
+            HomeView()
                 .tabItem {
                     Image(systemName: "house.fill")
                     Text("Home")
@@ -16,22 +18,22 @@ struct ContentView: View {
                     Image(systemName: "shoeprints.fill")
                     Text("Walk")
                 }
-            
+            CheerView()
+                .tabItem {
+                    Image(systemName: "trophy.fill")
+                    Text("Player")
+                }
 
             UserView()
                 .tabItem {
                     Image(systemName: "person.circle")
                     Text("User")
                 }
-            DebugView()
-                .tabItem {
-                    Image(systemName: "ladybug.circle")
-                    Text("Debug")
-                }
+//            DebugView()
+//                .tabItem {
+//                    Image(systemName: "ladybug.circle")
+//                    Text("Debug")
+//                }
         }
     }
-}
-
-#Preview {
-    ContentView()
 }

@@ -2,7 +2,7 @@ import SwiftUI
 
 struct PointView: View {
     // Observe UserManager to update UI automatically
-    @StateObject var userManager = UserManager()
+    @EnvironmentObject var userManager : UserManager
     
     var body: some View {
         VStack(spacing: 30) {
@@ -53,6 +53,3 @@ struct PointView: View {
     }
 }
 
-#Preview {
-    PointView()
-}
