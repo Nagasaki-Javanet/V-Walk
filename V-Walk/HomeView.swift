@@ -141,7 +141,7 @@ struct RankProgressView: View {
 // Carousel style banner with navigation arrows and custom indicators.
 struct StadiumAdsBanner: View {
     // Dummy data for ad banners (e.g., image names or URLs)
-    let ads = ["https://pbs.twimg.com/media/GyTJoTCa4AQJlPN.jpg","https://digique.co.jp/wp-content/uploads/2025/07/main.jpg","https://prcdn.freetls.fastly.net/release_image/16651/635/16651-635-49940127c60c13edf56ec21e346ac581-640x360.png?format=jpeg&auto=webp&fit=bounds&width=720&height=480"]
+    let ads = ["","",""]
     @State private var currentIndex = 0 // Tracks the current banner index
     
     var body: some View {
